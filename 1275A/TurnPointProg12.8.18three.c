@@ -249,8 +249,18 @@ task autonomous()
 	}
 	else if (SensorValue[jump] == 1)
 	{
-		resetMotorEncoder(rightDrive);
-		resetMotorEncoder(leftDrive);
+		motor[ballIntake] = 70;
+		move(-3000);
+		wait1Msec(1600);
+		move(2900);
+		wait1Msec(300);
+		turn(-90*direction);
+		wait1Msec(300);
+
+		int offest = 300;
+		move(offset);
+		wait1Msec(300);
+
 		motor[flipper] = -127;
 		waitUntil(SensorValue[flip] < 650);
 		//wait1Msec(1400);
@@ -261,10 +271,11 @@ task autonomous()
 		waitUntil(SensorValue[flip] > flipUpVal);
 		//wait1Msec(900);
 		motor[flipper] = 0;
-		move(3000);
+
+		move(3000-offset);
 		wait1Msec(300);
 		move(-3180);
-		resetMotorEncoder(rightDrive);
+
 		turn(-90*direction);
 		/*if(direction == 1)
 		{
@@ -279,7 +290,7 @@ task autonomous()
 			waitUntil(getMotorEncoder(rightDrive) < -180);
 		}*/
 		//move(0);
-		move(5860);
+		move(5560);
 		resetMotorEncoder(rightDrive);
 		resetMotorEncoder(leftDrive);
 		liftEnable = flipperEnable = driveEnable = catapultEnable = 1;
