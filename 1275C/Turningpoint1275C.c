@@ -88,8 +88,28 @@ task autonomous()
 		motor[leftFront] = motor[leftBack] = 127;
 		motor[rightFront] = motor[rightBack] = -127;
 	}
-	wait1Msec(325);
+	wait1Msec(340);
 	//move towards the cap
+	if (SensorValue(auton)>1850)
+	{
+		motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = -127;
+	//wait1Msec(2000);
+	waitUntil(getMotorEncoder(leftFront)>1250);
+	//reached the cap
+	motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
+	resetMotorEncoder(leftFront);
+	//flip the cap
+	motor[leftArm] = motor[rightArm] = 50;
+	wait1Msec(1000);
+	//return arm to normal position
+	motor[leftArm] = motor[rightArm] = -80;
+	wait1Msec(500);
+	motor[leftArm] = motor[rightArm] = 0;
+	motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 127;
+	wait1Msec(300);
+	motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
+}
+else{
 	motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = -127;
 	//wait1Msec(2000);
 	waitUntil(getMotorEncoder(leftFront)>750);
@@ -97,12 +117,14 @@ task autonomous()
 	motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
 	resetMotorEncoder(leftFront);
 	//flip the cap
-	motor[leftArm] = motor[rightArm] = 80;
+	motor[leftArm] = motor[rightArm] = 50;
 	wait1Msec(1000);
 	//return arm to normal position
 	motor[leftArm] = motor[rightArm] = -80;
 	wait1Msec(1500);
 	motor[leftArm] = motor[rightArm] = 0;
+}
+
 	//turn right to ram
 	/*motor[leftFront] = motor[leftBack] = -127;
 	motor[rightFront] = motor[rightBack] = 127;
@@ -273,7 +295,7 @@ task usercontrol()
 		motor[leftFront] = motor[leftBack] = leftDriveValue;
 		motor[rightFront] = motor[rightBack] = rightDriveValue;
 
-		motor[leftArm] = motor[rightArm] = (vexRT[Btn6U] - vexRT[Btn6D]) * 90;
+		motor[leftArm] = motor[rightArm] = (vexRT[Btn6U] - vexRT[Btn6D]) * 60;
 
 		motor[leftShoot] = motor[rightShoot] = (vexRT[Btn8D] * 60) + 20;
 
