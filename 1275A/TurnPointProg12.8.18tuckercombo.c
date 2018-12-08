@@ -249,39 +249,10 @@ task autonomous()
 	}
 	else if (SensorValue[jump] == 1)
 	{
-		resetMotorEncoder(rightDrive);
-		resetMotorEncoder(leftDrive);
-		int offset = 270;
-		move(offset);
+		move(900);
 		wait1Msec(300);
-		motor[flipper] = -127;
-		waitUntil(SensorValue[flip] < 650);
-		//wait1Msec(1400);
-		motor[flipper] = 0;
-		startTask(autoLaunch);
-		wait1Msec(1000);
-		motor[flipper] = 127;
-		waitUntil(SensorValue[flip] > flipUpVal);
-		//wait1Msec(900);
-		motor[flipper] = 0;
-		move(3000-offset-450);
-		wait1Msec(300);
-		move(-3180);
-		resetMotorEncoder(rightDrive);
 		turn(-90*direction);
-		/*if(direction == 1)
-		{
-			motor[leftDrive] = -60;
-			motor[rightDrive] = 60;
-			waitUntil(getMotorEncoder(rightDrive) > 180);
-		}
-		else
-		{
-			motor[leftDrive] =  60;
-			motor[rightDrive] =-60;
-			waitUntil(getMotorEncoder(rightDrive) < -180);
-		}*/
-		//move(0);
+		wait1Msec(300);
 		move(5360);
 		resetMotorEncoder(rightDrive);
 		resetMotorEncoder(leftDrive);
@@ -348,13 +319,13 @@ task usercontrol()
 
 		// Now do something with our toggle flag
 		if (buttonToggleState)
-			intakeVal = 127;
+			intakeVal = 75;
 		else
 			intakeVal = 0;
 
 		if(vexRT[Btn7U])
 		{
-			intakeVal = -127;
+			intakeVal = -75;
 		}
 		motor[ballIntake] = intakeVal;
 
