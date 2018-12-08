@@ -319,13 +319,13 @@ task usercontrol()
 
 		// Now do something with our toggle flag
 		if (buttonToggleState)
-			intakeVal = 75;
+			intakeVal = 85;
 		else
 			intakeVal = 0;
 
 		if(vexRT[Btn7U])
 		{
-			intakeVal = -75;
+			intakeVal = -85;
 		}
 		motor[ballIntake] = intakeVal;
 

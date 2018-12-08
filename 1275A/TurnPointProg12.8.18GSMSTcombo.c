@@ -266,23 +266,7 @@ task autonomous()
 		motor[flipper] = 0;
 		move(3000-offset-450);
 		wait1Msec(300);
-		move(-3180);
-		resetMotorEncoder(rightDrive);
-		turn(-90*direction);
-		/*if(direction == 1)
-		{
-			motor[leftDrive] = -60;
-			motor[rightDrive] = 60;
-			waitUntil(getMotorEncoder(rightDrive) > 180);
-		}
-		else
-		{
-			motor[leftDrive] =  60;
-			motor[rightDrive] =-60;
-			waitUntil(getMotorEncoder(rightDrive) < -180);
-		}*/
-		//move(0);
-		move(5360);
+		move(-1000);
 		resetMotorEncoder(rightDrive);
 		resetMotorEncoder(leftDrive);
 		liftEnable = flipperEnable = driveEnable = catapultEnable = 1;
