@@ -251,6 +251,9 @@ task autonomous()
 	{
 		resetMotorEncoder(rightDrive);
 		resetMotorEncoder(leftDrive);
+		int offset = 270;
+		move(offset);
+		wait1Msec(300);
 		motor[flipper] = -127;
 		waitUntil(SensorValue[flip] < 650);
 		//wait1Msec(1400);
@@ -261,7 +264,7 @@ task autonomous()
 		waitUntil(SensorValue[flip] > flipUpVal);
 		//wait1Msec(900);
 		motor[flipper] = 0;
-		move(3000);
+		move(3000-offset);
 		wait1Msec(300);
 		move(-3180);
 		resetMotorEncoder(rightDrive);
