@@ -257,7 +257,7 @@ task autonomous()
 		turn(-90*direction);
 		wait1Msec(300);
 
-		int offest = 300;
+		int offset = 300;
 		move(offset);
 		wait1Msec(300);
 
