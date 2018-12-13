@@ -1,4 +1,5 @@
-#pragma config(Sensor, in1,    auton,          sensorPotentiometer)
+#pragma config(Sensor, in1,    whichSide,      sensorPotentiometer)
+#pragma config(Sensor, in2,    whichSpot,      sensorNone)
 #pragma config(Sensor, dgtl1,  rightFront,     sensorQuadEncoder)
 #pragma config(Sensor, dgtl3,  leftFront,      sensorQuadEncoder)
 #pragma config(Motor,  port1,           rightFront,    tmotorVex393_HBridge, openLoop, encoderPort, dgtl1)
@@ -66,64 +67,125 @@ void pre_auton()
 
 task autonomous()
 {
-	resetMotorEncoder(leftBack);
-	resetMotorEncoder(leftFront);
-	//NOT NEAR FLAGS SPOT
-	motor[leftShoot] = motor[rightShoot] = 127;
-	motor[intake] = 127;
-	wait1Msec(1000);
-	motor[leftShoot] = motor[rightShoot] = 30;
-	wait1Msec(1000);
-	motor[leftShoot] = motor[rightShoot] = 127;
-	motor[intake] = 0;
-	wait1Msec(600);
-	motor[leftShoot] = motor[rightShoot] = 0;
-	if (SensorValue(auton)>1850)
+	if (SensorValue(whichSpot)>1850)
 	{
-		motor[leftFront] = motor[leftBack] = -127;
-		motor[rightFront] = motor[rightBack] = 127;
+		resetMotorEncoder(leftBack);
+		resetMotorEncoder(leftFront);
+		//NOT NEAR FLAGS SPOT
+		motor[leftShoot] = motor[rightShoot] = 127;
+		motor[intake] = 127;
+		wait1Msec(1000);
+		motor[leftShoot] = motor[rightShoot] = 30;
+		wait1Msec(1000);
+		motor[leftShoot] = motor[rightShoot] = 127;
+		motor[intake] = 0;
+		wait1Msec(600);
+		motor[leftShoot] = motor[rightShoot] = 0;
+		// >1850 when on blue alliance
+		if (SensorValue(whichSide)>1850)
+		{
+			motor[leftFront] = motor[leftBack] = -127;
+			motor[rightFront] = motor[rightBack] = 127;
+		}
+		else
+		{
+			motor[leftFront] = motor[leftBack] = 127;
+			motor[rightFront] = motor[rightBack] = -127;
+		}
+		wait1Msec(340);
+		//move towards the cap
+		if (SensorValue(whichSide)>1850)
+		{
+			motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = -127;
+			//wait1Msec(2000);
+			waitUntil(getMotorEncoder(leftFront)>1250);
+			//reached the cap
+			motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
+			resetMotorEncoder(leftFront);
+			//flip the cap
+			motor[leftArm] = motor[rightArm] = 50;
+			wait1Msec(1000);
+			//return arm to normal position
+			motor[leftArm] = motor[rightArm] = -80;
+			wait1Msec(500);
+			motor[leftArm] = motor[rightArm] = 0;
+			motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 127;
+			wait1Msec(300);
+			motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
+		}
+		else{
+			motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = -127;
+			//wait1Msec(2000);
+			waitUntil(getMotorEncoder(leftFront)>750);
+			//reached the cap
+			motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
+			resetMotorEncoder(leftFront);
+			//flip the cap
+			motor[leftArm] = motor[rightArm] = 50;
+			wait1Msec(1000);
+			//return arm to normal position
+			motor[leftArm] = motor[rightArm] = -80;
+			wait1Msec(1500);
+			motor[leftArm] = motor[rightArm] = 0;
+		}
 	}
+
 	else
 	{
-		motor[leftFront] = motor[leftBack] = 127;
-		motor[rightFront] = motor[rightBack] = -127;
-	}
-	wait1Msec(340);
-	//move towards the cap
-	if (SensorValue(auton)>1850)
-	{
+		motor[leftShoot] = motor[rightShoot] = 127;
+		//robot move forward to hit flag
+		motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 127;
+		//wait1Msec(500);
+		waitUntil(getMotorEncoder(rightFront)>500);
+		//constant shooter
+		motor[leftShoot] = motor[rightShoot] = 20;
+		//load the ball
+		motor[intake] = 127;
+		resetMotorEncoder(rightFront);
+		//wait1Msec(1000);
+		waitUntil(getMotorEncoder(rightFront)>1000);
+		//robot has hit flag
+		motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
+		resetMotorEncoder(rightFront);
+		//move back to shoot ball
 		motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = -127;
-	//wait1Msec(2000);
-	waitUntil(getMotorEncoder(leftFront)>1250);
-	//reached the cap
-	motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
-	resetMotorEncoder(leftFront);
-	//flip the cap
-	motor[leftArm] = motor[rightArm] = 50;
-	wait1Msec(1000);
-	//return arm to normal position
-	motor[leftArm] = motor[rightArm] = -80;
-	wait1Msec(500);
-	motor[leftArm] = motor[rightArm] = 0;
-	motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 127;
-	wait1Msec(300);
-	motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
-}
-else{
-	motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = -127;
-	//wait1Msec(2000);
-	waitUntil(getMotorEncoder(leftFront)>750);
-	//reached the cap
-	motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
-	resetMotorEncoder(leftFront);
-	//flip the cap
-	motor[leftArm] = motor[rightArm] = 50;
-	wait1Msec(1000);
-	//return arm to normal position
-	motor[leftArm] = motor[rightArm] = -80;
-	wait1Msec(1500);
-	motor[leftArm] = motor[rightArm] = 0;
-}
+		//wait1Msec(1000);
+		waitUntil(getMotorEncoder(rightFront)>100);
+		//ball is loaded and ready to fire
+		motor[intake] = 0;
+		motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
+		resetMotorEncoder(rightFront);
+		wait1Msec(150);
+		//fire ball
+		motor[leftShoot] = motor[rightShoot] = 127;
+		wait1Msec(1000);
+		//ball has hit flag
+		motor[leftShoot] = motor[rightShoot] = 0;
+		//move back to original position
+		motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = -127;
+		//wait1Msec(1000);
+		waitUntil(getMotorEncoder(rightFront)>1000);
+		motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
+		resetMotorEncoder(rightFront);
+		if (SensorValue(whichSide)>1850)
+		{
+			motor[leftFront] = motor[leftBack] = 127;
+			motor[rightFront] = motor[rightBack] = -127;
+		}
+		else
+		{
+			motor[leftFront] = motor[leftBack] = 127;
+			motor[rightFront] = motor[rightBack] = -127;
+		}
+		wait1Msec(750);
+		//ready to go for the gold
+		motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 127;
+		//wait1Msec(10000);
+		waitUntil(getMotorEncoder(rightFront)>10000);
+		motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 0;
+		resetMotorEncoder(rightFront);
+	}
+
 
 	//turn right to ram
 	/*motor[leftFront] = motor[leftBack] = -127;
@@ -186,12 +248,12 @@ else{
 
 
 
-	/*
+
 	//AUTON NUMBER 1 NEAR FLAGS SPOT
 	//if(SensorValue[auton] > 1850)
 	//{
 	//prep the shooter
-
+	/*
 	motor[leftShoot] = motor[rightShoot] = 127;
 	//robot move forward to hit flag
 	motor[leftFront] = motor[leftBack] = motor[rightFront] = motor[rightBack] = 127;
