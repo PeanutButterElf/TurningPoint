@@ -45,8 +45,8 @@
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 //Constants
-int catapultConstant = 17;
-int catapultDownVal = 105;
+int catapultConstant = 0;
+int catapultDownVal = 130;
 int flipFullUpVal = 1500;
 int flipUpVal = 1260;
 int flipDownVal = 650;

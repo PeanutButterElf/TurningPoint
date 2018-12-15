@@ -1,3 +1,4 @@
+
 #pragma config(Sensor, in1,    whichSide,      sensorPotentiometer)
 #pragma config(Sensor, in2,    whichSpot,      sensorNone)
 #pragma config(Sensor, dgtl1,  rightFront,     sensorQuadEncoder)
