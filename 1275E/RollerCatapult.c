@@ -32,7 +32,8 @@
 int d8Flag = 0;
 int rollerSpeed = 0;
 int toggleStateRoller = 0;
-int encoderGoal = 110; // Higher for lower catapult
+int encoderGoal = 107; // Higher for lower catapult
+int additionBonus = 5;
 int idlePower = 10;
 
 void autoShootFunction() {
@@ -44,7 +45,7 @@ void autoShootFunction() {
 		wait1Msec(200);
 		resetMotorEncoder(leftCatapult);
 		motor[leftCatapult] = motor[rightCatapult] = 127;
-		waitUntil(SensorValue[cTouch] == 0 && getMotorEncoder(leftCatapult) >= (encoderGoal + 5));
+		waitUntil(SensorValue[cTouch] == 0 && getMotorEncoder(leftCatapult) >= (encoderGoal + additionBonus));
 		motor[leftCatapult] = motor[rightCatapult] = idlePower;
 	} else {
 		motor[leftCatapult] = motor[rightCatapult] = 127;
@@ -63,7 +64,7 @@ task autoShoot() {
 		wait1Msec(200);
 		resetMotorEncoder(leftCatapult);
 		motor[leftCatapult] = motor[rightCatapult] = 127;
-		waitUntil(SensorValue[cTouch] == 0 && getMotorEncoder(leftCatapult) >= (encoderGoal + 5));
+		waitUntil(SensorValue[cTouch] == 0 && getMotorEncoder(leftCatapult) >= (encoderGoal + additionBonus));
 		motor[leftCatapult] = motor[rightCatapult] = idlePower;
 	} else {
 		motor[leftCatapult] = motor[rightCatapult] = 127;
@@ -107,12 +108,12 @@ void driveAndScoreCap() {
 	motor[frontLeft] = motor[backLeft] = motor[frontRight] = motor[backRight] = -127;
 	motor[rollers] = 127;
 	//waitUntil(getMotorEncoder(backLeft) >= rotationCount || getMotorEncoder(backRight) >= rotationCount);
-	wait1Msec(1500);
+	wait1Msec(1200);
 	motor[frontLeft] = motor[backLeft] = motor[frontRight] = motor[backRight] = 0;
 	wait1Msec(100);
-	motor[rollers] = 0;
+	//motor[rollers] = 0;
 }
-
+/*
 void Turn(int direction, int amount) {
 		resetMotorEncoder(backLeft);
 		resetMotorEncoder(backRight);
@@ -126,16 +127,7 @@ void Turn(int direction, int amount) {
 		}
 		motor[frontLeft] = motor[backLeft] = motor[frontRight] = motor[backRight] = 0;
 }
-
-
-void returnBack() {
-	resetMotorEncoder(backLeft);
-	resetMotorEncoder(backRight);
-	motor[frontLeft] = motor[backLeft] = motor[frontRight] = motor[backRight] = 127;
-	//waitUntil(getMotorEncoder(backLeft) <= -633 || getMotorEncoder(backRight) <= -633);
-	wait1Msec(1000);
-	motor[frontLeft] = motor[backLeft] = motor[frontRight] = motor[backRight] = 0;
-}
+*/
 
 void Drive(int rotations) {
 	resetMotorEncoder(backLeft);
@@ -156,19 +148,53 @@ void DriveBack(int rotations) {
 	motor[frontLeft] = motor[backLeft] = motor[frontRight] = motor[backRight] = 0;
 }
 
+void turnL(int rotations) {
+	resetMotorEncoder(backLeft);
+	resetMotorEncoder(backRight);
+	motor[frontLeft] = motor[backLeft] = -127;
+	motor[frontRight] = motor[backRight] = 127;
+	//waitUntil(getMotorEncoder(backLeft) <= (-1 * rotations) || getMotorEncoder(backRight) >= rotations);
+	wait1Msec(rotations);
+	motor[frontLeft] = motor[backLeft] = motor[frontRight] = motor[backRight] = 0;
+}
+
+void turnR(int rotations) {
+	resetMotorEncoder(backLeft);
+	resetMotorEncoder(backRight);
+	motor[frontLeft] = motor[backLeft] = 127;
+	motor[frontRight] = motor[backRight] = -127;
+	//waitUntil(getMotorEncoder(backLeft) >= rotations || getMotorEncoder(backRight) <= (rotations * -1));
+	wait1Msec(rotations);
+	motor[frontLeft] = motor[backLeft] = motor[frontRight] = motor[backRight] = 0;
+}
+
 task autonomous() {
 	if (SensorValue[fieldPos] > 2000) {
 		// Drive, Shoot, Get Low Flag, and then Return
 		Drive(50);
 		wait1Msec(50);
 		autoShootFunction();
+		if (SensorValue[side] > 2000) turnR(300);
+		else turnL(300);
 		wait1Msec(50);
 		Drive(100);
-		DriveBack(1000);
+		DriveBack(600);
 	} else {
 		// Drive and Score Cap,
-		driveAndScoreCap();
-		returnBack();
+		//driveAndScoreCap();
+		//Drive(200);
+		/*
+		DriveBack(1000);
+		if (SensorValue[side] > 2000) turnL(400);
+		else turnR(400);
+		Drive(500);
+		DriveBack(2900);
+		*/
+		motor[rollers] = -127;
+		DriveBack(1900);
+		Drive(200);
+		motor[frontLeft] = motor[backLeft] = motor[frontRight] = motor[backRight] = 0;
+
 	}
 	//Turn(direction, 280);
 
