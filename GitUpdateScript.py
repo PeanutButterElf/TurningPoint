@@ -5,6 +5,7 @@ system_message = ""
 os.system("COLOR 0B")
 os.system("cls")
 print("Welcome to the git updater for your robot code!")
+input("Press enter to continue.\n")
 
 while True:
     # def pushAll(self):
