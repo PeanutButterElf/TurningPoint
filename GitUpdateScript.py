@@ -11,7 +11,9 @@ while True:
     else:
         os.system("git pull")
         os.system("git add -A")
-        message = input("Commit Message?  :\n")
+        message = input("Commit Message? (nothing to escape) :\n")
+        if message == "":
+            break
         system_message = 'git commit -m "' + message + '"'
         os.system(system_message)
         os.system("git push")
