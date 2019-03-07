@@ -11,10 +11,10 @@ while True:
     else:
         os.system("git pull")
         os.system("git add -A")
-        message = input("Commit Message?  :/n")
+        message = input("Commit Message?  :\n")
         system_message = 'git commit -m "' + message + '"'
         os.system(system_message)
         os.system("git push")
-    rerun = input('Run again? (enter or "no")/n')
+    rerun = input('Run again? (enter or "no")\n')
     if rerun == "no":
         break
