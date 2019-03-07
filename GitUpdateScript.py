@@ -2,7 +2,10 @@ import os
 
 
 system_message = ""
+os.system("COLOR 0B")
+os.system("cls")
 print("Welcome to the git updater for your robot code!")
+
 while True:
     # def pushAll(self):
     output = os.system("ping -n 2 github.com")
