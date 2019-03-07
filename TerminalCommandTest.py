@@ -10,4 +10,6 @@ else:
     os.system("git add -A")
     message = input("Commit Message?  :")
     system_message = 'git commit -m "' + message + '"'
+    os.system(system_message)
+    os.system("git push")
 
