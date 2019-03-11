@@ -1,4 +1,5 @@
 import os
+import datetime
 
 
 system_message = ""
@@ -16,9 +17,11 @@ while True:
         os.system("git pull")
         print("Pull process complete.\n")
         os.system("git add -A")
-        message = input("Commit Message? (enter to escape) :\n")
+        message = input("Commit Message? Timestamp will be added at end (enter to escape) :\n")
         if message != "":
-            system_message = 'git commit -m "' + message + '"'
+            currentDT = datetime.datetime.now()
+            system_message = 'git commit -m "' + message + ' ' + currentDT.strftime("%Y/%m/%d %H:%M:%S") + '"'
+            print(system_message)
             os.system(system_message)
             os.system("git push")
             print("Push process complete.\n")
